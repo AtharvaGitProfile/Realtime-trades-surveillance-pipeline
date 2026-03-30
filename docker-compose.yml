@@ -52,7 +52,8 @@ services:
     command: |
       "
       echo 'Creating Kafka topics...'
-      kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic market-data
+      kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic market-data-stocks
+      kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic market-data-crypto
       kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic orders
       kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic trades
       kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --partitions 3 --replication-factor 1 --topic alerts
@@ -93,8 +94,10 @@ services:
     environment:
       FINNHUB_API_KEY: ${FINNHUB_API_KEY}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_MARKET_DATA_TOPIC: market-data
+      KAFKA_STOCKS_TOPIC: market-data-stocks
+      KAFKA_CRYPTO_TOPIC: market-data-crypto
       WATCH_SYMBOLS: ${WATCH_SYMBOLS:-AAPL,TSLA,JPM,MSFT,GOOGL}
+      WATCH_CRYPTO_SYMBOLS: ${WATCH_CRYPTO_SYMBOLS:-BINANCE:BTCUSDT,BINANCE:ETHUSDT,BINANCE:XRPUSDT}
     restart: unless-stopped
 
   order-generator:
@@ -109,10 +112,11 @@ services:
         condition: service_started
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_STOCKS_TOPIC: market-data-stocks
+      KAFKA_CRYPTO_TOPIC: market-data-crypto
       KAFKA_ORDERS_TOPIC: orders
       KAFKA_TRADES_TOPIC: trades
-      KAFKA_MARKET_DATA_TOPIC: market-data
-      WATCH_SYMBOLS: ${WATCH_SYMBOLS:-AAPL,TSLA,JPM,MSFT,GOOGL}
+      LOOP_TICK_SECONDS: "1.0"
     restart: unless-stopped
 
 volumes:

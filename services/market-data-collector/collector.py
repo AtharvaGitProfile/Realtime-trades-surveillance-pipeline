@@ -2,7 +2,9 @@
 Market Data Collector
 =====================
 Connects to Finnhub WebSocket API for real-time trade data
-and publishes each tick to the Kafka 'market-data' topic.
+and publishes each tick to the appropriate Kafka topic:
+  - market-data-stocks  (equity symbols, e.g. AAPL)
+  - market-data-crypto  (Binance symbols, e.g. BINANCE:BTCUSDT)
 
 This is the entry point for real market data into our
 surveillance pipeline.
@@ -28,8 +30,13 @@ logger = logging.getLogger("market-data-collector")
 # ── Configuration ────────────────────────────────────────
 FINNHUB_API_KEY = os.environ.get("FINNHUB_API_KEY")
 KAFKA_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-KAFKA_TOPIC = os.environ.get("KAFKA_MARKET_DATA_TOPIC", "market-data")
-WATCH_SYMBOLS = os.environ.get("WATCH_SYMBOLS", "AAPL,TSLA,JPM,MSFT,GOOGL").split(",")
+KAFKA_STOCKS_TOPIC = os.environ.get("KAFKA_STOCKS_TOPIC", "market-data-stocks")
+KAFKA_CRYPTO_TOPIC = os.environ.get("KAFKA_CRYPTO_TOPIC", "market-data-crypto")
+STOCK_SYMBOLS = os.environ.get("WATCH_SYMBOLS", "AAPL,TSLA,JPM,MSFT,GOOGL").split(",")
+CRYPTO_SYMBOLS = os.environ.get(
+    "WATCH_CRYPTO_SYMBOLS", "BINANCE:BTCUSDT,BINANCE:ETHUSDT,BINANCE:XRPUSDT"
+).split(",")
+WATCH_SYMBOLS = STOCK_SYMBOLS + CRYPTO_SYMBOLS
 
 if not FINNHUB_API_KEY:
     raise ValueError("FINNHUB_API_KEY environment variable is required")
@@ -99,8 +106,13 @@ def process_finnhub_message(ws, message, producer):
                 "ingested_at": datetime.now(timezone.utc).isoformat(),
             }
 
+            topic = (
+                KAFKA_CRYPTO_TOPIC
+                if trade["s"].startswith("BINANCE:")
+                else KAFKA_STOCKS_TOPIC
+            )
             producer.send(
-                KAFKA_TOPIC,
+                topic,
                 key=trade["s"],
                 value=event,
             )
@@ -134,8 +146,11 @@ def on_close(ws, close_status, close_msg):
 def main():
     logger.info("=" * 50)
     logger.info("Market Data Collector starting...")
-    logger.info(f"Symbols: {WATCH_SYMBOLS}")
-    logger.info(f"Kafka: {KAFKA_SERVERS} → topic '{KAFKA_TOPIC}'")
+    logger.info(f"Stock symbols : {STOCK_SYMBOLS}")
+    logger.info(f"Crypto symbols: {CRYPTO_SYMBOLS}")
+    logger.info(f"Kafka: {KAFKA_SERVERS}")
+    logger.info(f"  stocks → '{KAFKA_STOCKS_TOPIC}'")
+    logger.info(f"  crypto → '{KAFKA_CRYPTO_TOPIC}'")
     logger.info("=" * 50)
 
     # Connect to Kafka first

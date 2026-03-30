@@ -56,4 +56,4 @@ CREATE TABLE IF NOT EXISTS trader_daily_activity (
 CREATE INDEX idx_daily_activity_date ON trader_daily_activity(activity_date DESC);
 CREATE INDEX idx_daily_activity_cancel_rate ON trader_daily_activity(cancel_rate DESC);
 
-RAISE NOTICE 'Trade surveillance database initialized successfully.';
+DO $$ BEGIN RAISE NOTICE 'Trade surveillance database initialized successfully.'; END $$;
