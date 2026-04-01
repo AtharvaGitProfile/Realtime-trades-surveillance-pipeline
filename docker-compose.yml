@@ -119,5 +119,51 @@ services:
       LOOP_TICK_SECONDS: "1.0"
     restart: unless-stopped
 
+  # ============================================
+  # STREAM PROCESSING
+  # ============================================
+
+  flink-jobmanager:
+    build:
+      context: ./services/flink-processor
+      dockerfile: Dockerfile
+    image: flink-pyflink:1.18
+    container_name: flink-jobmanager
+    entrypoint: ["/opt/flink/jobs/setup.sh"]
+    command: jobmanager
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        rest.bind-address: 0.0.0.0
+    volumes:
+      - ./services/flink-processor:/opt/flink/jobs
+    restart: unless-stopped
+
+  flink-taskmanager:
+    build:
+      context: ./services/flink-processor
+      dockerfile: Dockerfile
+    image: flink-pyflink:1.18
+    container_name: flink-taskmanager
+    entrypoint: ["/opt/flink/jobs/setup.sh"]
+    command: taskmanager
+    depends_on:
+      kafka:
+        condition: service_healthy
+      flink-jobmanager:
+        condition: service_started
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        taskmanager.numberOfTaskSlots: 4
+    volumes:
+      - ./services/flink-processor:/opt/flink/jobs
+    restart: unless-stopped
+
 volumes:
   postgres_data:
