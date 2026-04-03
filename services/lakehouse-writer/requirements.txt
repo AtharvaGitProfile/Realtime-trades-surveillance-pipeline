@@ -1,2 +1,4 @@
 kafka-python==2.0.2
 minio==7.2.7
+pandas==2.2.2
+pyarrow==16.0.0
