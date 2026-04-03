@@ -120,6 +120,78 @@ services:
     restart: unless-stopped
 
   # ============================================
+  # LAKEHOUSE
+  # ============================================
+
+  bronze-writer:
+    build:
+      context: ./services/lakehouse-writer
+      dockerfile: Dockerfile
+    container_name: bronze-writer
+    depends_on:
+      kafka:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPICS: orders,trades,market-data-stocks,market-data-crypto,alerts
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: surveillance-lake
+      BATCH_SECONDS: "60"
+    restart: unless-stopped
+
+  # ============================================
+  # DATA LAKE
+  # ============================================
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  minio-setup:
+    image: minio/mc:latest
+    container_name: minio-setup
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      "
+      echo 'Configuring MinIO client...'
+      mc alias set lake http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+      echo 'Creating surveillance-lake bucket...'
+      mc mb --ignore-existing lake/surveillance-lake
+      echo 'Creating bronze/ silver/ gold/ directory placeholders...'
+      touch /tmp/.keep
+      mc cp /tmp/.keep lake/surveillance-lake/bronze/.keep
+      mc cp /tmp/.keep lake/surveillance-lake/silver/.keep
+      mc cp /tmp/.keep lake/surveillance-lake/gold/.keep
+      echo 'Setup complete. Bucket contents:'
+      mc ls lake/surveillance-lake
+      "
+
+  # ============================================
   # STREAM PROCESSING
   # ============================================
 
@@ -167,3 +239,4 @@ services:
 
 volumes:
   postgres_data:
+  minio_data:
