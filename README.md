@@ -2,7 +2,7 @@
 
 A production-style data engineering pipeline that detects market abuse patterns (spoofing, wash trading, front-running) in real-time using streaming market data.
 
-## Architecture
+## Architecture  
 
 ```
 ┌─────────────────┐  ┌──────────────────┐
@@ -104,8 +104,8 @@ open http://localhost:8501
 ## Build Phases
 
 - [x] Phase 1: Project structure + real market data ingestion
-- [ ] Phase 2: Kafka streaming pipeline
-- [ ] Phase 3: Flink real-time detection (spoofing, wash trading, front-running)
-- [ ] Phase 4: Data lakehouse (Bronze → Silver → Gold)
+- [x] Phase 2: Kafka streaming pipeline
+- [x] Phase 3: Flink real-time detection (spoofing, wash trading, front-running)
+- [x] Phase 4: Data lakehouse (Bronze → Silver → Gold)
 - [ ] Phase 5: Compliance dashboard
 - [ ] Phase 6: AWS deployment
