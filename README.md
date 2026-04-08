@@ -67,10 +67,6 @@ Detects circular trading between related accounts that creates artificial volume
 - **Signal**: Matching buy/sell patterns between account pairs on same asset
 - **Context**: Time proximity, price similarity, volume matching
 
-### 3. Front-Running Detection
-Flags broker accounts that trade ahead of large client orders.
-- **Signal**: Broker account trades same asset shortly before a large client order
-- **Context**: Position direction alignment, timing window, order size
 
 ## Project Structure
 
@@ -176,7 +172,7 @@ See [`docs/aws-architecture.md`](docs/aws-architecture.md) for estimated monthly
 
 - [x] Phase 1: Project structure + real market data ingestion
 - [x] Phase 2: Kafka streaming pipeline
-- [x] Phase 3: Flink real-time detection (spoofing, wash trading, front-running)
+- [x] Phase 3: Flink real-time detection (spoofing, wash trading)
 - [x] Phase 4: Data lakehouse (Bronze → Silver → Gold)
 - [x] Phase 5: Compliance dashboard
 - [ ] Phase 6: AWS deployment
