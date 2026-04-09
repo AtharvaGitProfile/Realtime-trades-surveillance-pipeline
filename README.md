@@ -23,17 +23,8 @@ Financial regulators require firms to monitor trading activity for market abuse.
 ---
 
 ## Architecture
+![Architecture](Architecture.png)
 
-```
-Finnhub WebSocket ──→ Kafka (market-data-stocks) ──→ Flink (spoofing) ──→ Kafka (alerts)
-                      Kafka (market-data-crypto)      Flink (wash trade)
-                      Kafka (orders)                          │
-Order Generator ────→ Kafka (trades)                          ▼
-                           │                            PostgreSQL
-                           ▼                                  │
-                      MinIO Data Lake                         ▼
-                      (Bronze/Silver/Gold)             Streamlit Dashboard
-```
 
 | Component | Technology | Role |
 |-----------|-----------|------|
