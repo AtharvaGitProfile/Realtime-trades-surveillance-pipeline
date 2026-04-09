@@ -6,7 +6,7 @@ Built as a full end-to-end system: from WebSocket ingestion through real-time pa
 
 **[Read the full writeup on Medium →](https://medium.com/p/69983e4a407b)**
 
-![Dashboard Screenshot](docs/images/dashboard.png)
+![Dashboard Screenshot](Dashboard.png)
 
 ---
 
