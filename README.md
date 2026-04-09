@@ -4,7 +4,7 @@ A streaming data platform that detects market manipulation (spoofing and wash tr
 
 Built as a full end-to-end system: from WebSocket ingestion through real-time pattern detection to a compliance analyst dashboard.
 
-**[Read the full writeup on Medium →](YOUR_MEDIUM_LINK_HERE)**
+**[Read the full writeup on Medium →](https://medium.com/p/69983e4a407b)**
 
 ![Dashboard Screenshot](docs/images/dashboard.png)
 
@@ -225,8 +225,8 @@ Estimated monthly cost: ~$1,065 baseline. Detailed breakdown, IAM policies, VPC 
 
 Python, Apache Kafka, Apache Flink (PyFlink), MinIO, PostgreSQL, Streamlit, Docker Compose, Finnhub API
 
----
+--
 
-## License
+## Linkedin
 
-MIT
+https://www.linkedin.com/in/patilatharva/
