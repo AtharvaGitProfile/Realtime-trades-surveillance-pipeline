@@ -214,7 +214,7 @@ Estimated monthly cost: ~$1,065 baseline. Detailed breakdown, IAM policies, VPC 
 
 ## Built With
 
-Python, Apache Kafka, Apache Flink (PyFlink), MinIO, PostgreSQL, Streamlit, Docker Compose, Finnhub API
+Python, Apache Kafka, Apache Flink (PyFlink), Databricks, PostgreSQL, Streamlit, Docker Compose, Finnhub API
 
 --
 
