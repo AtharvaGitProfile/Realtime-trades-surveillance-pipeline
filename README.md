@@ -7,6 +7,7 @@ Built as a full end-to-end system: from WebSocket ingestion through real-time pa
 **[Read the full writeup on Medium →](https://medium.com/p/69983e4a407b)**
 
 ![Dashboard Screenshot](Dashboard.png)
+![Dashboard Screenshot](Databricks_Dashboard.png)
 
 ---
 
@@ -194,7 +195,7 @@ In production, the local Docker services would map to managed AWS equivalents:
 |-------|-----|-----|
 | Kafka (Docker) | Amazon MSK | Managed brokers, automatic replication, no patching |
 | Flink (Docker) | Amazon Managed Flink | Managed cluster, auto-scaling, checkpointing |
-| MinIO | Databricks  | Modern Data Platform, Unity Catalog |
+| MinIO | S3  | Modern Data Platform, Unity Catalog |
 | PostgreSQL | RDS PostgreSQL | Automated backups, failover, free tier eligible |
 | Streamlit (Docker) | ECS Fargate | Serverless containers, no instance management |
 
