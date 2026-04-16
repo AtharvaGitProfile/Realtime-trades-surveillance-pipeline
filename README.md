@@ -7,7 +7,7 @@ Built as a full end-to-end system: from WebSocket ingestion through real-time pa
 **[Read the full writeup on Medium →](https://medium.com/p/69983e4a407b)**
 
 ![Dashboard Screenshot](Dashboard.png)
-![Dashboard Screenshot](Databricks_Dashboard.png)
+![Dashboard Screenshot]((https://github.com/AtharvaGitProfile/Realtime-trades-surveillance-pipeline/blob/main/Databricks%20Dashboard.png))
 
 ---
 
