@@ -194,7 +194,7 @@ In production, the local Docker services would map to managed AWS equivalents:
 |-------|-----|-----|
 | Kafka (Docker) | Amazon MSK | Managed brokers, automatic replication, no patching |
 | Flink (Docker) | Amazon Managed Flink | Managed cluster, auto-scaling, checkpointing |
-| MinIO | S3 + Iceberg | Virtually unlimited storage, lifecycle policies |
+| MinIO | Databricks  | Modern Data Platform, Unity Catalog |
 | PostgreSQL | RDS PostgreSQL | Automated backups, failover, free tier eligible |
 | Streamlit (Docker) | ECS Fargate | Serverless containers, no instance management |
 
@@ -207,8 +207,7 @@ Estimated monthly cost: ~$1,065 baseline. Detailed breakdown, IAM policies, VPC 
 - ML-based anomaly scoring to replace fixed thresholds, trained on the gold layer feature set
 - Dead letter queue for malformed events that Flink cannot parse
 - Grafana monitoring for pipeline health (lag, throughput, error rates)
-- Iceberg table format for ACID transactions and time-travel queries on the data lake
-- Additional detection patterns: layering, front-running, insider trading correlation with corporate event calendars
+- Databricks Delta table format for ACID transactions and time-travel queries on the data lake
 
 ---
 
